@@ -1,7 +1,6 @@
-// ignore_for_file: prefer_const_constructors, use_key_in_widget_constructors, library_private_types_in_public_api
+// ignore_for_file: library_private_types_in_public_api, use_key_in_widget_constructors, prefer_const_constructors
 
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 
 class ChemistryQuizPage extends StatefulWidget {
@@ -74,6 +73,8 @@ class _ChemistryQuizPageState extends State<ChemistryQuizPage> {
         .toList(growable: false);
   }
 
+  Map<int, String?> _selectedAnswers = {};
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -107,6 +108,44 @@ class _ChemistryQuizPageState extends State<ChemistryQuizPage> {
           },
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          final score = calculateScore();
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: Text('Quiz Result'),
+                content: Text(score >= 7
+                    ? 'Congratulations! You passed the quiz with a score of $score.'
+                    : 'Oops! You did not pass the quiz. Your score is $score.'),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text('OK'),
+                  ),
+                ],
+              );
+            },
+          );
+        },
+        child: Icon(Icons.check),
+      ),
     );
+  }
+
+  int calculateScore() {
+    int score = 0;
+    for (int i = 0; i < selectedQuestions.length; i++) {
+      final question = selectedQuestions[i];
+      final correctAnswer = question['answer'];
+      final selectedAnswer = _selectedAnswers[i];
+      if (selectedAnswer == correctAnswer) {
+        score++;
+      }
+    }
+    return score;
   }
 }

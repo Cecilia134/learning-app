@@ -1,8 +1,8 @@
-// ignore_for_file: prefer_const_constructors, use_key_in_widget_constructors
+// ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
 import 'bio_quiz.dart'; 
-import 'phys.quiz.dart';
+import 'phys_quiz.dart';
 import 'chem_quiz.dart'; 
 
 class QuizzesPage extends StatelessWidget {
@@ -10,49 +10,57 @@ class QuizzesPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Quizzes', textAlign: TextAlign.center), 
+        title: Text('Quizzes', textAlign: TextAlign.center),
         centerTitle: true,
         backgroundColor: Color.fromARGB(255, 127, 45, 214),
       ),
-      backgroundColor: Color.fromARGB(255, 14, 200, 237), 
+      backgroundColor: Color.fromARGB(255, 14, 200, 237),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start, 
-          crossAxisAlignment: CrossAxisAlignment.start, 
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => BiologyQuizPage(), 
-                  ),
-                );
+            DropdownButton<String>(
+              hint: Text('Select Quiz'),
+              onChanged: (String? value) {
+                if (value != null) {
+                  switch (value) {
+                    case 'Biology':
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => BiologyQuizPage(),
+                        ),
+                      );
+                      break;
+                    case 'Physics':
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => PhysicsQuizPage(),
+                        ),
+                      );
+                      break;
+                    case 'Chemistry':
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ChemistryQuizPage(),
+                        ),
+                      );
+                      break;
+                  }
+                }
               },
-              child: Text('Biology Quiz'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => PhysicsQuizPage(), 
-                  ),
-                );
-              },
-              child: Text('Physics Quiz'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ChemistryQuizPage(), 
-                  ),
-                );
-              },
-              child: Text('Chemistry Quiz'),
+              items: <String>['Biology', 'Physics', 'Chemistry']
+                  .map<DropdownMenuItem<String>>(
+                    (String value) => DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value + ' Quiz'),
+                    ),
+                  )
+                  .toList(),
             ),
           ],
         ),
@@ -60,6 +68,7 @@ class QuizzesPage extends StatelessWidget {
     );
   }
 }
+
 
 class SubjectScreen extends StatelessWidget {
   final String subject;
@@ -71,6 +80,12 @@ class SubjectScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(subject),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
       body: Center(
         child: Text(
